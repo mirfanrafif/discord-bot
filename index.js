@@ -1,5 +1,8 @@
 const discord = require("discord.js");
-const client = new discord.Client();
+const MusicClient = require("./Client");
+const music = require("./music");
+
+const client = new MusicClient({ token: process.env.DISCORD_TOKEN });
 
 const prefix = ".";
 
@@ -9,15 +12,42 @@ client.on("ready", () => {
 
 //message
 client.on("message", (message) => {
-  if (!message.content.startsWith(prefix) || message.author.bot) return;
-
-  if (message.content === `${prefix}ping`) {
+  if (!message.content.startsWith(prefix) || message.author.bot) {
+    return;
   } else {
-    const args = message.content.slice(prefix.length).split(" ");
+    const args = message.content.slice(prefix.length).split(/ +/);
     const command = args.shift().toLowerCase();
 
-    if (command === "say") {
-      message.channel.send(args);
+    switch (command) {
+      case "avatar":
+        const mentionedUser = message.mentions.users.first();
+        message.channel.send(mentionedUser.avatarURL());
+        break;
+
+      case "ping":
+        const reply = message.createdTimestamp - new Date().getTime() + " ms";
+        message.channel.send(reply);
+        break;
+
+      case "play":
+        music.MusicPlay(message, args);
+        break;
+
+      case "queue":
+        music.queue(message);
+        break;
+
+      case "stop":
+        music.stop(message);
+        break;
+
+      case "skip":
+        music.skip(message);
+        break;
+
+      default:
+        message.channel.send("Command not found");
+        break;
     }
   }
 });
