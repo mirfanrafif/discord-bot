@@ -18,9 +18,7 @@ module.exports = {
     if (serverQueue) {
       serverQueue.songs.push(song);
       console.log(serverQueue.songs);
-      return message.channel.send(
-        `✅ **${song.title}** uda ditambahin ke playlistmu`
-      );
+      return message.react(`✅`);
     }
 
     const queueConstruct = {
@@ -50,7 +48,7 @@ module.exports = {
         })
         .on("error", (error) => console.error(error));
       dispatcher.setVolumeLogarithmic(queue.volume / 5);
-      queue.textChannel.send(`🎶 Mulai nyetel **${song.title}**`);
+      message.react("🎶");
     };
 
     try {
@@ -58,12 +56,8 @@ module.exports = {
       queueConstruct.connection = connection;
       play(queueConstruct.songs[0]);
     } catch (error) {
-      console.error(`gabisa join ke voice channel kamu karena : ${error}`);
       message.client.queue.delete(message.guild.id);
       await channel.leave();
-      return message.channel.send(
-        `gabisa join ke voice channel kamu karena : ${error}`
-      );
     }
   },
   queue(message) {
@@ -76,9 +70,10 @@ module.exports = {
 		`);
   },
   skip(message) {
+    const serverQueue = message.client.queue.get(message.guild.id);
     if (serverQueue && serverQueue.playing) {
       serverQueue.connection.dispatcher.end();
-      return message.channel.send("⏩ Lagumu di skip");
+      return message.react("⏩");
     }
   },
   stop(message) {
@@ -88,5 +83,7 @@ module.exports = {
     const serverQueue = message.client.queue.get(message.guild.id);
     if (!serverQueue) return message.channel.send("Mau nyetop apa aku...");
     serverQueue.songs = [];
+    serverQueue.connection.dispatcher.end();
+    message.react("⏹");
   },
 };
