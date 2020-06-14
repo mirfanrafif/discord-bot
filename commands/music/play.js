@@ -1,14 +1,26 @@
-const ytdl = require("ytdl-core");
+const { Command } = require("discord.js-commando");
 const { Util } = require("discord.js");
+const ytdl = require("ytdl-core");
+const youtube = require("youtube-node");
 
-module.exports = {
-  async MusicPlay(message, args) {
+module.exports = class extends Command {
+  constructor(client) {
+    super(client, {
+      name: "play",
+      group: "music",
+      memberName: "play",
+      description: "Ngeplay musik",
+    });
+  }
+
+  async run(message) {
     const { channel } = message.member.voice;
     if (!channel)
       return message.channel.send("Kamu belum gabung voice channel, nak...");
 
     const serverQueue = message.client.queue.get(message.guild.id);
-    const songInfo = await ytdl.getInfo(args[0].replace(/<(.+)>/g, "$1"));
+    const songInfo = await ytdl.getInfo(message.argString);
+
     const song = {
       id: songInfo.videoDetails.videoId,
       title: Util.escapeMarkdown(songInfo.videoDetails.title),
@@ -17,8 +29,8 @@ module.exports = {
 
     if (serverQueue) {
       serverQueue.songs.push(song);
-      console.log(serverQueue.songs);
-      return message.react(`✅`);
+      message.react(`✅`);
+      return;
     }
 
     const queueConstruct = {
@@ -59,31 +71,5 @@ module.exports = {
       message.client.queue.delete(message.guild.id);
       await channel.leave();
     }
-  },
-  queue(message) {
-    const serverQueue = message.client.queue.get(message.guild.id);
-    if (!serverQueue) return message.channel.send("Playlist kamu kosong.");
-    return message.channel.send(`
-      Playlist kamu : \n
-      ${serverQueue.songs.map((song) => `**-** ${song.title}`).join("\n")}
-      Yang kamu setel sekarang : ${serverQueue.songs[0].title}
-		`);
-  },
-  skip(message) {
-    const serverQueue = message.client.queue.get(message.guild.id);
-    if (serverQueue && serverQueue.playing) {
-      serverQueue.connection.dispatcher.end();
-      return message.react("⏩");
-    }
-  },
-  stop(message) {
-    const { channel } = message.member.voice;
-    if (!channel)
-      return message.channel.send("Kamu belum gabung voice channel, nak...");
-    const serverQueue = message.client.queue.get(message.guild.id);
-    if (!serverQueue) return message.channel.send("Mau nyetop apa aku...");
-    serverQueue.songs = [];
-    serverQueue.connection.dispatcher.end();
-    message.react("⏹");
-  },
+  }
 };
