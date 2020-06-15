@@ -7,6 +7,7 @@ module.exports = class extends Command {
       group: "music",
       memberName: "stop",
       description: "Nyetop musik",
+      guildOnly: true,
     });
   }
 

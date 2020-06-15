@@ -6,13 +6,17 @@ module.exports = class extends Command {
       name: "avatar",
       group: "common",
       memberName: "avatar",
-      description: "Replies with a meow, kitty cat.",
+      description: "Munculin avatar",
     });
   }
 
   run(message) {
-    console.log("kodingan ini jalan");
-    const mentionedUser = message.mentions.users.first();
-    return message.channel.send(mentionedUser.avatarURL());
+    var avatar;
+    if (message.mentions.users.first()) {
+      avatar = message.mentions.users.first();
+      return message.channel.send(avatar.avatarURL());
+    } else {
+      message.channel.send("Mention orangnya dong...");
+    }
   }
 };

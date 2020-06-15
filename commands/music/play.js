@@ -1,7 +1,6 @@
 const { Command } = require("discord.js-commando");
 const { Util } = require("discord.js");
 const ytdl = require("ytdl-core");
-const youtube = require("youtube-node");
 
 module.exports = class extends Command {
   constructor(client) {
@@ -10,6 +9,7 @@ module.exports = class extends Command {
       group: "music",
       memberName: "play",
       description: "Ngeplay musik",
+      guildOnly: true,
     });
   }
 

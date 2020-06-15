@@ -1,10 +1,10 @@
 const path = require("path");
 const MusicClient = require("./MusicClient");
-const { CommandoClient } = require("discord.js-commando");
+require("dotenv").config();
 
 const client = new MusicClient({
-  commandPrefix: ".",
-  owner: "523031781373640714",
+  commandPrefix: process.env.DISCORD_PREFIX,
+  owner: process.env.DISCORD_OWNER,
 });
 
 client.registry
@@ -30,4 +30,4 @@ client.on("guildMemberAdd", async (member) => {
 
 client.on("error", console.error);
 
-client.login("NzIxMDIyNDU4NTA0Njc1NDE4.XuOeyg.sEeXOjKDGZi_hovH0VyXei9ubkM");
+client.login(process.env.DISCORD_TOKEN);
