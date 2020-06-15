@@ -1,4 +1,5 @@
 const { Command } = require("discord.js-commando");
+const { MessageAttachment } = require("discord.js");
 
 module.exports = class extends Command {
   constructor(client) {
@@ -13,8 +14,9 @@ module.exports = class extends Command {
   run(message) {
     var avatar;
     if (message.mentions.users.first()) {
-      avatar = message.mentions.users.first();
-      return message.channel.send(avatar.avatarURL());
+      var user = message.mentions.users.first();
+      avatar = new MessageAttachment(user.avatarURL());
+      return message.channel.send(avatar);
     } else {
       message.channel.send("Mention orangnya dong...");
     }
