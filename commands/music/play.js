@@ -1,6 +1,7 @@
 const { Command } = require("discord.js-commando");
 const { Util } = require("discord.js");
 const ytdl = require("ytdl-core");
+const YouTube = require("youtube-node");
 
 module.exports = class extends Command {
   constructor(client) {
@@ -13,13 +14,20 @@ module.exports = class extends Command {
     });
   }
 
-  async run(message) {
-    const { channel } = message.member.voice;
+  run(message) {
+    var youtube = new YouTube();
+    youtube.setKey(process.env.YOUTUBE_API_KEY);
+    youtube.search(message.argString, 2, async function (err, res) {
+      var data = res.items[0];
+
+      const { channel } = message.member.voice;
     if (!channel)
       return message.channel.send("Kamu belum gabung voice channel, nak...");
 
     const serverQueue = message.client.queue.get(message.guild.id);
-    const songInfo = await ytdl.getInfo(message.argString);
+    const songInfo = await ytdl.getInfo(
+      "https://www.youtube.com/watch?v=" + data.id.videoId
+    );
 
     const song = {
       id: songInfo.videoDetails.videoId,
@@ -71,5 +79,6 @@ module.exports = class extends Command {
       message.client.queue.delete(message.guild.id);
       await channel.leave();
     }
+    });
   }
 };
