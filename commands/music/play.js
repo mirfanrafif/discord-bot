@@ -6,6 +6,7 @@ const YouTube = require("youtube-node");
 module.exports = class extends Command {
   constructor(client) {
     super(client, {
+      aliases: ["p"],
       name: "play",
       group: "music",
       memberName: "play",
@@ -19,6 +20,7 @@ module.exports = class extends Command {
     youtube.setKey(process.env.YOUTUBE_API_KEY);
     youtube.search(message.argString, 2, async function (err, res) {
       var data = res.items[0];
+      // console.log(data);
 
       const { channel } = message.member.voice;
       if (!channel)
@@ -30,8 +32,8 @@ module.exports = class extends Command {
       );
 
       const song = {
-        id: songInfo.videoDetails.videoId,
-        title: Util.escapeMarkdown(songInfo.videoDetails.title),
+        id: data.id.videoId,
+        title: Util.escapeMarkdown(data.snippet.title),
         url: songInfo.videoDetails.video_url,
       };
 

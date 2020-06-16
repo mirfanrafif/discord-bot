@@ -3,6 +3,7 @@ const { Command } = require("discord.js-commando");
 module.exports = class extends Command {
   constructor(client) {
     super(client, {
+      aliases: ["q"],
       name: "queue",
       group: "music",
       memberName: "queue",
