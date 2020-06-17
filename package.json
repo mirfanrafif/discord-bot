@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "apex-api": "^3.1.0",
     "discord.js": "^12.2.0",
     "discord.js-commando": "github:discordjs/commando",
     "dotenv": "^8.2.0",
