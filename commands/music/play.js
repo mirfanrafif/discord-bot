@@ -27,9 +27,16 @@ module.exports = class extends Command {
         return message.channel.send("Kamu belum gabung voice channel, nak...");
 
       const serverQueue = message.client.queue.get(message.guild.id);
-      const songInfo = await ytdl.getInfo(
-        "https://www.youtube.com/watch?v=" + data.id.videoId
-      );
+
+      var songInfo;
+
+      if (message.argString.substring(0, 5) == "https") {
+        songInfo = message.argString;
+      } else {
+        songInfo = await ytdl.getInfo(
+          "https://www.youtube.com/watch?v=" + data.id.videoId
+        );
+      }
 
       const song = {
         id: data.id.videoId,
