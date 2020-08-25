@@ -69,8 +69,12 @@ module.exports = class extends Command {
           return;
         }
 
+        options = {
+          quality: "highestaudio",
+        };
+
         const dispatcher = queue.connection
-          .play(ytdl(song.url))
+          .play(ytdl(song.url), options)
           .on("finish", () => {
             queue.songs.shift();
             play(queue.songs[0]);
