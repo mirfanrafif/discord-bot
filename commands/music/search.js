@@ -9,7 +9,7 @@ module.exports = class extends Command {
       aliases: ["sc"],
       name: "search",
       group: "music",
-      memberName: "play",
+      memberName: "search",
       description: "Search musik di yutub",
       guildOnly: true,
     });
