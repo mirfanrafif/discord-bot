@@ -20,7 +20,7 @@ module.exports = class extends Command {
     youtube.setKey(process.env.YOUTUBE_API_KEY);
     youtube.search(message.argString, 2, async function (err, res) {
       var data = res.items[0];
-      // console.log(data);
+      console.log(data);
 
       const { channel } = message.member.voice;
       if (!channel)
@@ -69,12 +69,10 @@ module.exports = class extends Command {
           return;
         }
 
-        options = {
-          quality: "highestaudio",
-        };
-
         const dispatcher = queue.connection
-          .play(ytdl(song.url), options)
+          .play(ytdl(song.url), {
+            quality: "highestaudio",
+          })
           .on("finish", () => {
             queue.songs.shift();
             play(queue.songs[0]);
