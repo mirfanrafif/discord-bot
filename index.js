@@ -24,7 +24,7 @@ client.once("ready", () => {
 
 //autoroles
 client.on("guildMemberAdd", async (member) => {
-  var role = member.guild.roles.cache.find((r) => r.name === "numpang lewat");
+  var role = member.guild.roles.cache.find((r) => r.name === "Pendaftar");
   await member.roles.add(role.id);
 });
 
